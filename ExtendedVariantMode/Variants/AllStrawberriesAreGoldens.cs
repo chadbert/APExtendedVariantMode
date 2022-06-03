@@ -239,6 +239,10 @@ namespace ExtendedVariants.Variants {
             bool wasCollected = self.ReturnHomeWhenLost;
             self.ReturnHomeWhenLost = origReturnHome;
 
+            Logger.Log("StrawberryKey", self.ID.Key);
+            Logger.Log("StrawberryLevel", self.ID.Level);
+            Logger.Log("Strawberry", self.ID.ToString());
+
             if (wasCollected) {
                 // store the inventory to restore it if needed.
                 new DynData<Strawberry>(self)["playerInventoryOnCollection"] = player.Inventory;

@@ -1,6 +1,6 @@
-﻿- Name: ExtendedVariantMode
-  Version: 0.22.15
-  DLL: ExtendedVariantMode.dll
+﻿- Name: APExtendedVariantMode
+  Version: 0.1.1
+  DLL: APExtendedVariantMode.dll
   Dependencies:
     - Name: Everest
       Version: 1.3205.0

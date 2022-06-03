@@ -6,8 +6,8 @@
     <ProjectGuid>{8CBA6958-CD94-44B4-970B-5FC3DBE6B019}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ExtendedVariants</RootNamespace>
-    <AssemblyName>ExtendedVariantMode</AssemblyName>
+    <RootNamespace>APExtendedVariants</RootNamespace>
+    <AssemblyName>APExtendedVariantMode</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <OutputPath Condition=" '$(TravisCore)' == 'true' ">Artifact\</OutputPath>
@@ -40,7 +40,7 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="Celeste">
-      <HintPath>..\lib-stripped\Celeste.exe</HintPath>
+      <HintPath>G:\SteamLibrary\steamapps\common\Celeste\Celeste.exe</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="DJMapHelper">
@@ -48,11 +48,11 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="FNA">
-      <HintPath>..\Everest\lib-stripped\FNA.dll</HintPath>
+      <HintPath>..\..\FNA\bin\Debug\FNA.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="MMHOOK_Celeste">
-      <HintPath>..\MMHOOK_Celeste.dll</HintPath>
+      <HintPath>G:\SteamLibrary\steamapps\common\Celeste\MMHOOK_Celeste.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Mono.Cecil, Version=0.11.4.0, Culture=neutral, PublicKeyToken=50cebf1cceb9d05e, processorArchitecture=MSIL">
@@ -149,6 +149,7 @@
     <Compile Include="UI\TextMenuOptionExt.cs" />
     <Compile Include="VariantRandomizer.cs" />
     <Compile Include="Variants\AbstractExtendedVariant.cs" />
+    <Compile Include="Variants\ArchipelagoStrawberryPickup.cs" />
     <Compile Include="Variants\LegacyDashSpeedBehavior.cs" />
     <Compile Include="Variants\DontRefillStaminaOnGround.cs" />
     <Compile Include="Variants\DisableSuperBoosts.cs" />

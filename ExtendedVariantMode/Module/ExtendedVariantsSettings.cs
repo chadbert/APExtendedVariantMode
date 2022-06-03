@@ -25,6 +25,11 @@ namespace ExtendedVariants.Module {
         // ======================================
 
         [SettingIgnore]
+        public bool Archipelago { get; set; } = true;
+
+        // ======================================
+
+        [SettingIgnore]
         public float Gravity { get; set; } = 1f;
 
         // ======================================
