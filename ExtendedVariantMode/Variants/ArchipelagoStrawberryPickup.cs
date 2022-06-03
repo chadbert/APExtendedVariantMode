@@ -56,6 +56,13 @@ namespace ExtendedVariants.Variants
 
                 // Add AP logic here
                 Logger.Log("strawberry", self.ID.ToString());
+
+                Session session = self.SceneAs<Level>().Session;
+                Logger.Log("Level", session.Area.GetSID());
+                Logger.Log("Chapeter", session.Area.ChapterIndex.ToString());
+                Logger.Log("Count Safe", SaveData.Instance.TotalStrawberries_Safe.ToString());
+                Logger.Log("Count", SaveData.Instance.TotalStrawberries.ToString());
+
             }
         }
 
