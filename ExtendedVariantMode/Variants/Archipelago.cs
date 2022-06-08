@@ -16,7 +16,7 @@ using Archipelago.MultiClient.Net.Packets;
 
 namespace ExtendedVariants.Variants
 {
-    class ArchipelagoStrawberryPickup : AbstractExtendedVariant
+    class Archipelago : AbstractExtendedVariant
     {
         private ArchipelagoSession currentAPSession;
         private Dictionary<long, string> itemLookupCache = new Dictionary<long, string>();
@@ -39,10 +39,28 @@ namespace ExtendedVariants.Variants
         public override void Load()
         {
             On.Celeste.Strawberry.CollectRoutine += Strawberry_CollectRoutine;
+            On.Celeste.Cassette.CollectRoutine += Cassette_CollectRoutine;
             On.Celeste.Session.ctor += onSessionStart;
             On.Celeste.Level.RegisterAreaComplete += Level_RegisterAreaComplete;
 
             //collectRoutineHook = new ILHook(typeof(Strawberry).GetMethod("CollectRoutine", BindingFlags.NonPublic | BindingFlags.Instance).GetStateMachineTarget(), patchAllGoldenFlags);
+        }
+
+        private System.Collections.IEnumerator Cassette_CollectRoutine(On.Celeste.Cassette.orig_CollectRoutine orig, Cassette self, Player player)
+        {
+            Session session = self.SceneAs<Level>().Session;
+            Logger.Log("Cassette collected", self.Tag.ToString());
+            if (!CassetteMap.ContainsKey(session.Area.ChapterIndex))
+            {
+                Logger.Log("Cassette Location Not Mapped", session.Area.ChapterIndex.ToString());
+            }
+            else
+            {
+                long location = CassetteMap[session.Area.ChapterIndex];
+                Logger.Log("Location Complete", location.ToString());
+            }
+
+            return orig(self, player);
         }
 
         private void Level_RegisterAreaComplete(On.Celeste.Level.orig_RegisterAreaComplete orig, Level self)
@@ -197,6 +215,11 @@ namespace ExtendedVariants.Variants
             { "11:9", 77216 }, // "Forsaken City 11 - Post B-Side cassette" },
             { "12z:8", 77217 }, // "Forsaken City 12z - Diamond Room" }
             { "7a:12", 77218 } // Forsaken City 7a - Triple Platform Room
+        };
+
+        private static Dictionary<int, long> CassetteMap = new Dictionary<int, long>
+        {
+            { 1, 77400 } // Forsaken City
         };
     }
 }

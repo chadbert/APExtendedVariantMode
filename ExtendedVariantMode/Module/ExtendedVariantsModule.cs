@@ -157,7 +157,7 @@ namespace ExtendedVariants.Module {
             VariantHandlers[Variant.AlwaysInvisible] = new AlwaysInvisible();
             VariantHandlers[Variant.DisplaySpeedometer] = new DisplaySpeedometer();
             VariantHandlers[Variant.LegacyDashSpeedBehavior] = new LegacyDashSpeedBehavior();
-            VariantHandlers[Variant.Archipelago] = new ArchipelagoStrawberryPickup();
+            VariantHandlers[Variant.Archipelago] = new Variants.Archipelago();
         }
 
         // ================ Mod options setup ================

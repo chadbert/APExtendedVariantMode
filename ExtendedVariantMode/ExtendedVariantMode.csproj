@@ -159,7 +159,7 @@
     <Compile Include="UI\TextMenuOptionExt.cs" />
     <Compile Include="VariantRandomizer.cs" />
     <Compile Include="Variants\AbstractExtendedVariant.cs" />
-    <Compile Include="Variants\ArchipelagoStrawberryPickup.cs" />
+    <Compile Include="Variants\Archipelago.cs" />
     <Compile Include="Variants\LegacyDashSpeedBehavior.cs" />
     <Compile Include="Variants\DontRefillStaminaOnGround.cs" />
     <Compile Include="Variants\DisableSuperBoosts.cs" />
