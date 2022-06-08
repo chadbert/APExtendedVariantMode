@@ -18,7 +18,6 @@ namespace ExtendedVariants.Variants
 {
     class ArchipelagoStrawberryPickup : AbstractExtendedVariant
     {
-        private ILHook collectRoutineHook;
         private ArchipelagoSession currentAPSession;
         private Dictionary<long, string> itemLookupCache = new Dictionary<long, string>();
 
@@ -41,8 +40,25 @@ namespace ExtendedVariants.Variants
         {
             On.Celeste.Strawberry.CollectRoutine += Strawberry_CollectRoutine;
             On.Celeste.Session.ctor += onSessionStart;
+            On.Celeste.Level.RegisterAreaComplete += Level_RegisterAreaComplete;
 
             //collectRoutineHook = new ILHook(typeof(Strawberry).GetMethod("CollectRoutine", BindingFlags.NonPublic | BindingFlags.Instance).GetStateMachineTarget(), patchAllGoldenFlags);
+        }
+
+        private void Level_RegisterAreaComplete(On.Celeste.Level.orig_RegisterAreaComplete orig, Level self)
+        {
+            // Currently complete upon ForsakenCity completion
+            // TODO: Only send completion once
+            if (self.Session.Area.ChapterIndex == 1 && self.Session.Area.Mode == AreaMode.Normal)
+            {
+                Logger.Log("Finished level", self.Session.Area.GetSID());
+
+                this.currentAPSession.Socket.SendPacket(new StatusUpdatePacket { Status = ArchipelagoClientState.ClientGoal });
+            }
+
+            // TODO: announce level completion? Store completed levels.
+
+            orig(self);
         }
 
         private System.Collections.IEnumerator Strawberry_CollectRoutine(On.Celeste.Strawberry.orig_CollectRoutine orig, Strawberry self, int collectIndex)
@@ -56,17 +72,16 @@ namespace ExtendedVariants.Variants
             Logger.Log("Count Safe", SaveData.Instance.TotalStrawberries_Safe.ToString());
             Logger.Log("Count", SaveData.Instance.TotalStrawberries.ToString());
 
-            // Celeste/1-ForsakenCity
-            string locationName = session.Area.GetSID().Split('-')[1] + ' ' + self.ID.Key.Split(':')[0];
-            Logger.Log("Location Complete", locationName);
-
-            long apID = this.currentAPSession.Locations.GetLocationIdFromName("Celeste", locationName);
-            //long apID = locationIds[self.ID.Key];
-
-            Logger.Log("AP ID", apID.ToString());
-            if (apID != -1)
+            if (!LocationMap.ContainsKey(self.ID.Key))
             {
-                this.currentAPSession.Locations.CompleteLocationChecks(apID);
+                Logger.Log("AP Location Not Mapped", self.ID.ToString());
+            }
+            else 
+            {
+                long location = LocationMap[self.ID.Key];
+                Logger.Log("Location Complete", location.ToString());
+
+                this.currentAPSession.Locations.CompleteLocationChecks(location);
             }
 
             return orig(self, collectIndex);
@@ -82,6 +97,12 @@ namespace ExtendedVariants.Variants
         {
             On.Celeste.Strawberry.CollectRoutine -= Strawberry_CollectRoutine;
             On.Celeste.Session.ctor -= onSessionStart;
+            On.Celeste.Level.RegisterAreaComplete -= Level_RegisterAreaComplete;
+
+            if (currentAPSession != null && currentAPSession.Socket.Connected)
+            {
+                currentAPSession.Socket.Disconnect();
+            }
         }
 
         protected override void DoSetVariantValue(object value)
@@ -153,6 +174,29 @@ namespace ExtendedVariants.Variants
         private static Dictionary<long, string> ItemMap = new Dictionary<long, string>
         {
             { 77000, "Strawberry" }
+        };
+
+        private static Dictionary<string, long> LocationMap = new Dictionary<string, long>
+        {
+            { "2:11", 77200 }, // "Forsaken City 2 - First Strawberry" },
+            { "3:9", 77201 }, // "Forsaken City 3" },
+            { "3b:2", 77202 }, // "Forsaken City 3b - Winged Strawberry" },
+            { "5z:10", 77203 }, // "Forsaken City 5z" },
+            { "5:21", 77204 }, // "Forsaken City 5" },
+            { "7zb:2", 77205 }, // "Forsaken City 7zb - Above Theo" },
+            { "6:12", 77206 }, // "Forsaken City 6 - Behind Dirt" },
+            { "s1:9", 77207 }, // "Forsaken City s1 - Computer Terminal" },
+            { "7z:3", 77208 }, // "Forsaken City 7z - Hidden Path" },
+            { "8zb:1", 77209 }, // "Forsaken City 8zb - Double Hidden Path" },
+            { "9z:3", 77210 }, // "Forsaken City 9z" },
+            { "8b:1", 77211 }, // "Forsaken City 8b" },
+            { "9:14", 77212 }, // "Forsaken City 9" },
+            { "9b:9", 77213 }, // "Forsaken City 9b" },
+            { "9c:2", 77214 }, // "Forsaken City 9c - Winged Strawberry" },
+            { "10zb:1", 77215 }, // "Forsaken City 10zb - Off the Cliff" },
+            { "11:9", 77216 }, // "Forsaken City 11 - Post B-Side cassette" },
+            { "12z:8", 77217 }, // "Forsaken City 12z - Diamond Room" }
+            { "7a:12", 77218 } // Forsaken City 7a - Triple Platform Room
         };
     }
 }
